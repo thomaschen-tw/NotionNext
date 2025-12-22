@@ -16,7 +16,7 @@ const SearchInput = ({ currentSearch, cRef, className }) => {
     }
   })
 
-  const handleSearch = () => {
+  const handleSearch1 = () => {
     let keyword = searchInputRef.current.value
     if (keyword) {
       keyword = keyword.trim()
@@ -52,6 +52,24 @@ const SearchInput = ({ currentSearch, cRef, className }) => {
     setFilteredNavPages(filterAllNavPages)
   }
 
+  const handleSearch = async () => {
+  let keyword = searchInputRef.current.value
+  if (!keyword) {
+    setFilteredNavPages(allNavPages)
+    return
+  }
+
+  try {
+    const res = await fetch(`/api/search?q=${encodeURIComponent(keyword)}`)
+    const data = await res.json()
+    // 后端返回的格式：[{id, title, summary, tags}]
+    setFilteredNavPages(data)
+  } catch (err) {
+    console.error('Search error:', err)
+  }
+}
+
+
   /**
    * 回车键
    * @param {*} e
@@ -59,7 +77,7 @@ const SearchInput = ({ currentSearch, cRef, className }) => {
   const handleKeyUp = e => {
     if (e.keyCode === 13) {
       // 回车
-      handleSearch(searchInputRef.current.value)
+      handleSearch()
     } else if (e.keyCode === 27) {
       // ESC
       cleanSearch()
