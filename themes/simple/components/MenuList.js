@@ -52,6 +52,12 @@ export const MenuList = ({ customNav, customMenu }) => {
       name: locale.COMMON.TAGS,
       href: '/tag',
       show: siteConfig('SIMPLE_MENU_TAG', null, CONFIG)
+    },
+    {
+      icon: 'fas fa-plus-circle',
+      name: locale.NAV.CREATE_POST,
+      href: '/create-post',
+      show: true  // 始终显示创建文章按钮
     }
   ]
 
@@ -62,6 +68,20 @@ export const MenuList = ({ customNav, customMenu }) => {
   // 如果 开启自定义菜单，则覆盖Page生成的菜单
   if (siteConfig('CUSTOM_MENU')) {
     links = customMenu
+  }
+
+  // 确保创建文章按钮始终显示（即使有自定义菜单也添加）
+  const createPostLink = {
+    icon: 'fas fa-plus-circle',
+    name: locale.NAV.CREATE_POST,
+    href: '/create-post',
+    show: true
+  }
+  
+  // 检查是否已经存在创建文章按钮，避免重复
+  const hasCreatePost = links?.some(link => link.href === '/create-post')
+  if (!hasCreatePost) {
+    links = links ? [...links, createPostLink] : [createPostLink]
   }
 
   if (!links || links.length === 0) {
